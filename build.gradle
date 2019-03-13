@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-clover-plugin:2.2.2'
+    }
+}
+
+// Minimum root project configuration
+apply plugin: 'com.bmuschko.clover'
+
+dependencies {
+    clover 'org.openclover:clover:4.3.1'
+}
+
+clover {
+    report {
+        html = true
+    }
+}
+
+// Shared projects configuration
+allprojects {
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // Source module project configuration
+    if (file('src').isDirectory()) {
+        apply plugin: 'java'
+        apply plugin: 'groovy'
+        apply plugin: 'com.bmuschko.clover'
+
+        sourceCompatibility = 1.8
+
+        dependencies {
+            clover 'org.openclover:clover:4.3.1'
+
+            compile 'org.codehaus.groovy:groovy:2.5.0'
+            testCompile group: 'junit', name: 'junit', version: '4.12'
+            testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.5'
+        }
+
+        clover {
+            report {
+                html = true
+            }
+        }
+    }
+}
